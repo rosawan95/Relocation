@@ -1,0 +1,36 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
+     
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" 
+	p:driverClassName="${driver}" 
+	p:url="${url}" 
+	p:username="${user}" 
+	p:password="${password}"
+	>
+	</bean>
+	
+	<bean id="entityMFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+          <property name="dataSource" ref="dataSource"/>
+          <property name="packagesToScan" value="com.cg.asset.dtos"/>
+          <property name="persistenceProviderClass" value="org.hibernate.jpa.HibernatePersistenceProvider"/>
+          <property name="jpaPropertyMap">
+              <map>
+                  <entry key="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect"/>
+              </map>
+          </property>
+      </bean>
+	
+	<bean id="trManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityMFactory"/>
+	</bean>
+	
+	<tx:annotation-driven transaction-manager="trManager"/> 
+	     
+</beans>
